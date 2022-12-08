@@ -1,0 +1,1 @@
+LIVES_AMOUNT = 3
