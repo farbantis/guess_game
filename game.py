@@ -1,60 +1,51 @@
 import settings
 from models import Player, Enemy
 from game_exceptions import GameOver, EnemyDown
-from validators import player_name_validator
+from validators import player_name_validator, player_namelen_validator
 
 
 def play():
     player_name = input('Enter your name worrier: ')
-    if not player_name_validator(player_name=player_name):
-        print('please enter the correct name')
+    if not player_namelen_validator(player_name):
+        print('your name is too short, must be at least 3 letters')
         play()
-    player_action = input(f'{player_name}, please type start to begin or help.... ')
+    if not player_name_validator(player_name):
+        print('only letters and spaces are allowed')
+        play()
+    player_action = input(f'Hi, {player_name}- please type start to begin or help for information.... ')
 
     player = Player(player_name=player_name)
-    level = 1
-    enemy = Enemy(level=level)
-    enemy.lives = level
+    enemy = Enemy(level=settings.STARTING_LEVEL)
     while True:
-        print(f'level is {level}')
+        print(f'level is {enemy.level}')
         # при виникненні винятку EnemyDown підвищує рівень гри на 1, створює новий об'єкт Enemy з новим рівнем
-
         try:
-            print('===============================================================')
-            print(f'level {level}, score {player.score}')
-            print('please choose your character')
+            print('')
+            print(f'level {enemy.level}, score {player.score}')
+            print('please choose your character => validation of input')
             player.creature = int(input(str([f'{x} for {y}' for x, y in settings.GAME_CREATURES.items()])))
             player.attack(enemy)
+            print('')
 
-        except EnemyDown:
-            player.score += 5
-            level += 1
-            enemy = Enemy(level=level)
-            print(f'Enemy Down. level is {level} now, score is {player.score}')
-        print('===============================================================')
-        try:
             print('===============================================================')
-            print(f'level {level}, score {player.score}')
+            print(f'level {enemy.level}, score {player.score}')
             print('please choose your character for defence')
             player.creature = int(input(str([f'{x} for {y}' for x, y in settings.GAME_CREATURES.items()])))
             player.defence(enemy)
             print('===============================================================')
+
         except EnemyDown:
             player.score += 5
-            level += 1
-            enemy = Enemy(level=level)
-            print(f'Enemy Down. level is {level} now, score is {player.score}')
-
-
-        #Player.defence(enemy_obj=enemy)
+            new_level = enemy.level + 1
+            enemy = Enemy(level=new_level)
+            print(f'Enemy Down. level is {enemy.level} now, score is {player.score}')
 
 
 if __name__ == '__main__':
     try:
         play()
     except GameOver:
-        GameOver.record()
-        print('Your game is over...')
+        print('Your game is over... your scoure is //')
     except KeyboardInterrupt:
         pass
     finally:

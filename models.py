@@ -16,7 +16,8 @@ class Enemy:
         print(f'decresing enemy live, was {self.lives} is {self.lives -1}')
         self.lives -= 1
         if self.lives <= 0:
-            EnemyDown()
+            print(f'calling enemy down')
+            raise EnemyDown()
 
 
 class Player:
@@ -25,6 +26,7 @@ class Player:
         self.player_name = player_name
         self.lives = settings.LIVES_AMOUNT
         self.score = 0
+        self.allowed_attacks = settings.ALLOWED_ATTACKS
 
     @staticmethod
     def fight(attack=None, defence=None) -> 0 or -1 or 1:
@@ -37,7 +39,7 @@ class Player:
     def decrease_lives(self):
         self.lives -= 1
         if self.lives <= 0:
-            GameOver(self.player_name, self.score)
+            raise GameOver(self.player_name, self.score)
 
     def attack(self, enemy_obj):
         player_move = self.creature
