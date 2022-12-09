@@ -1,4 +1,3 @@
-
 import settings
 from models import Player, Enemy
 from game_exceptions import GameOver, EnemyDown
@@ -19,17 +18,33 @@ def play():
     while True:
         print(f'level is {level}')
         # при виникненні винятку EnemyDown підвищує рівень гри на 1, створює новий об'єкт Enemy з новим рівнем
-        print('please choose your character')
-        player.creature = int(input(str([f'{x} for {y}' for x, y in settings.GAME_CREATURES.items()])))
+
         try:
+            print('===============================================================')
+            print(f'level {level}, score {player.score}')
+            print('please choose your character')
+            player.creature = int(input(str([f'{x} for {y}' for x, y in settings.GAME_CREATURES.items()])))
             player.attack(enemy)
-            player.defence(enemy)
+
         except EnemyDown:
             player.score += 5
             level += 1
             enemy = Enemy(level=level)
-            print(f'level is {level} now')
+            print(f'Enemy Down. level is {level} now, score is {player.score}')
         print('===============================================================')
+        try:
+            print('===============================================================')
+            print(f'level {level}, score {player.score}')
+            print('please choose your character for defence')
+            player.creature = int(input(str([f'{x} for {y}' for x, y in settings.GAME_CREATURES.items()])))
+            player.defence(enemy)
+            print('===============================================================')
+        except EnemyDown:
+            player.score += 5
+            level += 1
+            enemy = Enemy(level=level)
+            print(f'Enemy Down. level is {level} now, score is {player.score}')
+
 
         #Player.defence(enemy_obj=enemy)
 
@@ -38,6 +53,7 @@ if __name__ == '__main__':
     try:
         play()
     except GameOver:
+        GameOver.record()
         print('Your game is over...')
     except KeyboardInterrupt:
         pass

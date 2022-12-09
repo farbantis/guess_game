@@ -13,6 +13,7 @@ class Enemy:
         return randint(1, 3)
 
     def decreased_lives(self):
+        print(f'decresing enemy live, was {self.lives} is {self.lives -1}')
         self.lives -= 1
         if self.lives <= 0:
             EnemyDown()
@@ -48,8 +49,8 @@ class Player:
             print("It's a draw")
         elif result == 1:
             print('You attacked successfully!')
-            enemy_obj.decreased_lives()
             self.score += 1
+            enemy_obj.decreased_lives()
         elif result == -1:
             print('You missed, and lost a live')
             self.decrease_lives()

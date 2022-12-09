@@ -11,7 +11,8 @@ class GameOver(Exception):
         self.time = datetime.datetime.now().strftime("%d/%m/%y %H:%m:%S")
 
     def record(self):
-        pass
+        with open('score.txt', 'a+') as f:
+            print(f"{self.player}: {self.score} |{self.time}")
 
 
 class EnemyDown(Exception):
