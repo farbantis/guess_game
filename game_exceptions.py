@@ -3,14 +3,15 @@ import datetime
 
 class GameOver(Exception):
     """
-    В класі має бути реалізований метод для збереження фінального рахунку гри по її завершенню.
+    initialize when player looses the game
+    records results in a file
     """
-    def __init__(self, player, score):
+    def __init__(self, player: str, score: int):
         self.player = player
         self.score = score
         self.time = datetime.datetime.now().strftime("%d/%m/%y %H:%m:%S")
-        print('game over launched')
         self.record()
+        print(f'winning score is {self.score}')
 
     def record(self):
         with open('score.txt', 'a+') as f:
@@ -19,6 +20,6 @@ class GameOver(Exception):
 
 class EnemyDown(Exception):
     """
-    Функціонал не потрібен, тільки декларація.
+    left empty
     """
-    print('inside enemy down')
+
