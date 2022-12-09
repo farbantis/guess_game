@@ -3,11 +3,10 @@ import settings
 from game_exceptions import EnemyDown, GameOver
 
 
-
 class Enemy:
     def __init__(self, level):
         self.level = level
-        self.lives = 1
+        self.lives = level
 
     @staticmethod
     def select_attack():
@@ -37,7 +36,7 @@ class Player:
     def decrease_lives(self):
         self.lives -= 1
         if self.lives <= 0:
-            GameOver()
+            GameOver(self.player_name, self.score)
 
     def attack(self, enemy_obj):
         player_move = self.creature
@@ -49,21 +48,29 @@ class Player:
             print("It's a draw")
         elif result == 1:
             print('You attacked successfully!')
-            # level += 1
             enemy_obj.decreased_lives()
+            self.score += 1
         elif result == -1:
-            print('You miseed')
-        print(f'lives are {self.lives}')
-
+            print('You missed, and lost a live')
+            self.decrease_lives()
+        print(f'your lives: {self.lives} | enemy lives: {enemy_obj.lives}')
 
     def defence(self, enemy_obj):
-        pass
+        enemy_move = enemy_obj.select_attack()  # обирає атаку противника з об'екту enemy_obj;
+        print(f'enemy move {enemy_move}')
+        player_move = self.creature
+        print(f'player move {player_move}')
+        result = self.fight(enemy_move, player_move)
+        if result == 0:
+            print("It's a draw")
+        elif result == 1:
+            print('Enemy attacked successfully!')
+            self.decrease_lives()
+        elif result == -1:
+            print('Enemy missed')
+        print(f'your lives: {self.lives} | enemy lives: {enemy_obj.lives}')
 
-"""
-defence(self, enemy_obj) - такий самий, як метод attack(), тільки в метод fight
- першим передається атака противника, та при вдалій атаці противника викликається метод 
- decrease_lives гравця.
-    """
+
 
 
 
