@@ -1,5 +1,5 @@
 from random import randint
-import settings
+from settings import ALLOWED_ATTACKS, LIVES_AMOUNT, PLAYER_GAME_RESULT, ENEMY_GAME_RESULT
 from game_exceptions import EnemyDown, GameOver
 
 
@@ -27,15 +27,18 @@ class Player:
     """
     def __init__(self, player_name: str):
         self.player_name = player_name
-        self.lives = settings.LIVES_AMOUNT
+        self.lives = LIVES_AMOUNT
         self.score = 0
-        self.allowed_attacks = settings.ALLOWED_ATTACKS
+        self.allowed_attacks = ALLOWED_ATTACKS
+        self.creature = None
+        self.mode = 1
 
     @staticmethod
     def fight(attack: int, defence: int) -> 0 or -1 or 1:
+        """determines the winner of the fight"""
         if attack == defence:
             return 0
-        elif attack + 1 == defence or attack - 2 == defence:
+        if defence in any([attack + 1, attack - 2]):
             return 1
         return -1
 
@@ -45,34 +48,21 @@ class Player:
             raise GameOver(self.player_name, self.score)
 
     def attack(self, enemy_obj):
-        player_move = self.creature
-        enemy_move = enemy_obj.select_attack()
-        print(f'player move {player_move}, enemy move {enemy_move}')
-        result = self.fight(player_move, enemy_move)
-        if result == 0:
-            print("It's a draw")
-        elif result == 1:
-            print('You attacked successfully!')
+        """player's attack mode"""
+        result = self.fight(self.creature, enemy_obj.select_attack())
+        print(PLAYER_GAME_RESULT[result])
+        if result == 1:
             self.score += 1
             enemy_obj.decreased_lives()
-        elif result == -1:
-            print('You missed, and lost one life')
-            self.decrease_lives()
-        print(f'your lives: {self.lives} | enemy lives: {enemy_obj.lives}')
+        print(f'your lives: {self.lives} | enemy lives: {enemy_obj.lives}\n')
 
     def defence(self, enemy_obj):
-        enemy_move = enemy_obj.select_attack()
-        player_move = self.creature
-        print(f'enemy move {enemy_move}, player move {player_move}')
-        result = self.fight(enemy_move, player_move)
-        if result == 0:
-            print("It's a draw")
-        elif result == 1:
-            print('Enemy attacked successfully!')
+        """player's defence mode"""
+        result = self.fight(enemy_obj.select_attack(), self.creature)
+        print(ENEMY_GAME_RESULT[result])
+        if result == 1:
             self.decrease_lives()
-        elif result == -1:
-            print('Enemy missed')
-        print(f'your lives: {self.lives} | enemy lives: {enemy_obj.lives}')
+        print(f'your lives: {self.lives} | enemy lives: {enemy_obj.lives}\n')
 
 
 

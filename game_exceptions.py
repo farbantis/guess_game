@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 
 class GameOver(Exception):
@@ -9,17 +9,16 @@ class GameOver(Exception):
     def __init__(self, player: str, score: int):
         self.player = player
         self.score = score
-        self.time = datetime.datetime.now().strftime("%d/%m/%y %H:%m:%S")
+        self.time = dt.datetime.now().strftime("%d/%m/%y %H:%m:%S")
         self.record()
-        print(f'winning score is {self.score}')
 
     def record(self):
-        with open('score.txt', 'a+') as f:
-            print(f"{self.player}: {self.score} |{self.time}", file=f)
+        """writes game result into a file"""
+        with open('score.txt', 'a+', encoding='utf-8') as text_file:
+            print(f"{self.player}: {self.score} |{self.time}", file=text_file)
 
 
 class EnemyDown(Exception):
     """
     left empty
     """
-
