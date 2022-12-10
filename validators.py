@@ -25,7 +25,10 @@ def player_action_validator(player_name: str) -> None:
         if player_action == 'start':
             break
         elif player_action == 'score':
-            print('add score display')
+            with open('score.txt') as f:
+                data = f.readlines()
+                data.sort(key=lambda x: int(x.split()[-3]))
+                print(data[:11])
         elif player_action == 'help':
             print(settings.RULES)
         elif player_action == 'exit':

@@ -15,7 +15,7 @@ class GameOver(Exception):
 
     def record(self):
         with open('score.txt', 'a+') as f:
-            print(f"{self.player}: {self.score} |{self.time}")
+            print(f"{self.player}: {self.score} |{self.time}", file=f)
 
 
 class EnemyDown(Exception):
