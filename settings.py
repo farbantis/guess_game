@@ -20,7 +20,7 @@ ENEMY_GAME_RESULT = {
 }
 RULES = {
     'start': 'start the game',
-    'show_scores': 'show the score',
+    'show_scores': 'shows top 10 players',
     'help': 'show this menu',
     'exit': 'exit the game'
 }
